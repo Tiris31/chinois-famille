@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chinois en famille</title>
+<meta name="theme-color" content="#b3121f">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+/* VOICE: chaleureux, familial, encourageant ; jamais scolaire
+   IDEA: un carnet de phrases qu'on garde dans la poche avant un repas de famille
+   PICTURE: la « phrase du jour » en grands caractères, prête à écouter
+   COLOUR and TYPE: rouge de fête dominant, blanc, accent or pour « je la sais » ; caractères CJK système
+   LAYOUT: bandeau rouge, phrase du jour, onglets Programme / Révision / Prononciation / Scènes */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#170c0d);--ink:light-dark(#22100f,#f6ecea);--muted:light-dark(#6d5552,#c2aaa6);--red:#b3121f;--redsoft:light-dark(#fbe9e9,#2c1416);--gold:#e5a50a;--line:light-dark(#ecdcda,#3a2224);--card:light-dark(#ffffff,#211314)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-x:clip}
+.zh{font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Noto Sans SC",sans-serif}
+.band{padding:clamp(22px,4vw,48px) max(5vw,16px)}
+header{background:var(--red);color:#fff}
+header.band,nav.tabs{padding-inline:max(16px,5vw,calc((100% - 1000px)/2))}
+header h1{font-size:clamp(28px,5vw,44px);line-height:1.05;margin:0 0 6px;text-wrap:balance}
+header p{margin:0;opacity:.92}
+.prog{margin-top:18px;max-width:520px}
+.bar{height:10px;border-radius:6px;background:rgba(255,255,255,.25);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--gold);width:0;transition:width .4s}
+.prog small{display:block;margin-top:6px;font-size:14px}
+.hero{background:var(--redsoft)}
+.hero .wrap,.main{max-width:1000px;margin:0 auto}
+.lbl{font-size:14px;color:var(--muted);margin:0 0 6px}
+.big{font-size:clamp(40px,9vw,72px);line-height:1.15;margin:0;color:var(--ink)}
+.bigpy{font-size:clamp(20px,3vw,26px);color:var(--red);margin:4px 0 0}
+:root[data-theme=dark] .bigpy,:root:not([data-theme=light]) .bigpy{color:light-dark(#b3121f,#ff8a8f)}
+.bigfr{font-size:18px;margin:6px 0 14px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+button{font:inherit;font-size:16px;min-height:44px;padding:0 16px;border-radius:22px;border:1.5px solid var(--red);background:transparent;color:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+button.pri{background:var(--red);color:#fff}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+button svg{width:18px;height:18px;flex:none}
+nav.tabs{display:flex;gap:6px;overflow-x:auto;padding:12px max(16px,5vw,calc((100% - 1000px)/2));border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5}
+nav.tabs button{border-color:transparent;flex:none}
+nav.tabs button[aria-selected=true]{background:var(--red);color:#fff}
+.main{max-width:none;padding:20px max(16px,5vw,calc((100% - 1000px)/2)) 60px}
+h2{font-size:26px;line-height:1.15;margin:8px 0 6px}
+h3{font-size:19px;margin:26px 0 10px}
+.weeks{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.weeks button{border-color:var(--line)}
+.weeks button[aria-pressed=true]{border-color:var(--red);background:var(--redsoft);font-weight:600}
+.goal{color:var(--muted);margin:0 0 6px;max-width:68ch}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:4px}
+.card.known{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.card .hz{font-size:30px;line-height:1.25}
+.card .py{color:light-dark(#b3121f,#ff8a8f);font-size:18px}
+.card .fr{font-weight:600}
+.card .ap,.card .nt{font-size:14px;color:var(--muted)}
+.card .row{margin-top:auto;padding-top:10px}
+.card button{min-height:40px;padding:0 12px;font-size:15px}
+label.ok{display:inline-flex;align-items:center;gap:6px;font-size:15px;min-height:40px;cursor:pointer}
+label.ok input{width:20px;height:20px;accent-color:var(--gold)}
+.mission{border-left:4px solid var(--gold);padding:12px 16px;background:var(--redsoft);border-radius:0 12px 12px 0;margin-top:14px}
+.routine{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px;margin:10px 0 0;padding:0;list-style:none}
+.routine li{border:1px solid var(--line);border-radius:12px;padding:12px}
+.routine b{display:block;color:light-dark(#b3121f,#ff8a8f)}
+.warn{background:#fff4d6;color:#4a3500;border-radius:12px;padding:12px 16px;margin:0 0 16px;font-size:15px}
+.flash{max-width:560px;margin:16px auto 0;text-align:center;border:1px solid var(--line);border-radius:18px;padding:28px 18px;background:var(--card)}
+.flash .q{font-size:22px;font-weight:600;min-height:2.2em}
+.flash .a{margin-top:14px}
+.flash .row{justify-content:center;margin-top:16px}
+select{font:inherit;font-size:16px;min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:inherit;padding:0 10px}
+table{border-collapse:collapse;width:100%;max-width:760px}
+td,th{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.tones{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:12px}
+.tones .card .hz{font-size:40px}
+.scene{border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.line{display:grid;grid-template-columns:7.5em minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
+.who{font-size:14px;color:var(--muted)}
+.line .hz{font-size:20px}
+.line small{display:block;color:var(--muted);font-size:14px}
+.line button{min-height:40px;width:44px;padding:0;justify-content:center}
+@media(max-width:600px){.line{grid-template-columns:minmax(0,1fr) auto}.who{grid-column:1/-1}table{font-size:14px}}
+@media(prefers-reduced-motion:reduce){.bar i{transition:none}}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header class="band">
+  <h1>Parler chinois en famille</h1>
+  <p>4 semaines · 10 minutes par jour · mandarin · bonjour, au revoir et à table</p>
+  <div class="prog"><div class="bar"><i id="pbar"></i></div><small id="ptxt"></small></div>
+</header>
+
+<section class="band hero"><div class="wrap">
+  <p class="lbl" id="heroLbl">Phrase du jour</p>
+  <p class="big zh" id="heroZh"></p>
+  <p class="bigpy" id="heroPy"></p>
+  <p class="bigfr" id="heroFr"></p>
+  <div class="row">
+    <button class="pri" data-say="hero" data-rate="0.85"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>Écouter</button>
+    <button data-say="hero" data-rate="0.55">Lentement</button>
+    <button id="heroOk">Je la sais</button>
+  </div>
+</div></section>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" data-tab="prog" aria-selected="true">Programme</button>
+  <button role="tab" data-tab="rev" aria-selected="false">Révision</button>
+  <button role="tab" data-tab="pron" aria-selected="false">Prononciation</button>
+  <button role="tab" data-tab="scenes" aria-selected="false">Scènes</button>
+</nav>
+
+<main class="main">
+  <div class="warn" id="voiceWarn" hidden></div>
+
+  <section id="tab-prog">
+    <h2>Votre routine de 10 minutes</h2>
+    <ol class="routine">
+      <li><b>1 min · Tons</b>Écoutez et répétez mā má mǎ mà (onglet Prononciation).</li>
+      <li><b>4 min · Nouvelles phrases</b>Les 2 phrases du jour : écoutez, répétez 5 fois chacune en imitant la mélodie.</li>
+      <li><b>3 min · Révision</b>Les cartes de l'onglet Révision, surtout celles « à revoir ».</li>
+      <li><b>2 min · Pour de vrai</b>Dites une phrase à votre femme ou aux enfants, et demandez-leur de vous corriger.</li>
+    </ol>
+    <h3>Semaine</h3>
+    <div class="weeks" id="weeks"></div>
+    <p class="goal" id="goal"></p>
+    <div id="days"></div>
+  </section>
+
+  <section id="tab-rev" hidden>
+    <h2>Révision</h2>
+    <div class="row">
+      <select id="revPool" aria-label="Phrases à réviser">
+        <option value="todo">Phrases pas encore sues</option>
+        <option value="all">Toutes les phrases</option>
+        <option value="1">Semaine 1</option><option value="2">Semaine 2</option>
+        <option value="3">Semaine 3</option><option value="4">Semaine 4</option>
+      </select>
+      <select id="revDir" aria-label="Sens">
+        <option value="fr">Français → chinois</option>
+        <option value="zh">Chinois → français (à l'oreille)</option>
+      </select>
+    </div>
+    <div class="flash" id="flash"></div>
+  </section>
+
+  <section id="tab-pron" hidden>
+    <h2>Les 4 tons</h2>
+    <p class="goal">En mandarin, la mélodie change le sens : mā (maman) et mǎ (cheval) ne sont pas le même mot. Imitez la voix, sans chercher la perfection : votre famille comprendra le contexte.</p>
+    <div class="tones" id="tones"></div>
+    <p class="goal" style="margin-top:12px">Astuce : quand deux 3e tons se suivent, le premier devient un 2e ton. 你好 nǐ hǎo se dit en réalité « ní hǎo ». La voix de l'appli le fait pour vous.</p>
+    <h3>Les sons qui surprennent un francophone</h3>
+    <table class="stack"><thead><tr><th>Pinyin</th><th>Se dit à peu près</th><th>Exemple</th></tr></thead><tbody id="sounds"></tbody></table>
+  </section>
+
+  <section id="tab-scenes" hidden>
+    <h2>Mini-scènes</h2>
+    <p class="goal">Jouez-les avec votre femme : elle prend le rôle des beaux-parents. Les répliques des autres sont là pour que vous les reconnaissiez.</p>
+    <div id="scenesBox"></div>
+  </section>
+</main>
+
+<script>
+{
+const P=[
+// Semaine 1
+{id:'a1',w:1,zh:'爸，妈，你们好！',py:'Bà, mā, nǐmen hǎo!',fr:'Bonjour papa, maman ! (aux beaux-parents)',ap:'ba, ma, ni-men hao',nt:'Après le mariage, beaucoup de gendres appellent leurs beaux-parents 爸 / 妈. Demandez à votre femme ce qui se fait chez elle (sinon : 叔叔 shūshu « oncle », 阿姨 āyí « tante »).'},
+{id:'a2',w:1,zh:'很高兴认识你们！',py:'Hěn gāoxìng rènshi nǐmen!',fr:'Je suis très heureux de vous rencontrer !',ap:'heun gao-sing jeun-cheu ni-men',nt:'Pour une première rencontre (认识 = faire connaissance).'},
+{id:'a3',w:1,zh:'很高兴见到你们！',py:'Hěn gāoxìng jiàndào nǐmen!',fr:'Je suis très heureux de vous voir !',ap:'heun gao-sing djien-dao ni-men',nt:'Quand vous vous connaissez déjà : à chaque visite.'},
+{id:'a4',w:1,zh:'早上好！',py:'Zǎoshang hǎo!',fr:'Bonjour ! (le matin)',ap:'dzao-chang hao',nt:'En famille, on dit souvent juste 早！ zǎo !'},
+{id:'a5',w:1,zh:'早上好，宝贝！',py:'Zǎoshang hǎo, bǎobèi!',fr:'Bonjour mon trésor !',ap:'dzao-chang hao, bao-beï',nt:'Pour les enfants. Parfait pour pratiquer chaque matin.'},
+{id:'a6',w:1,zh:'晚上好！',py:'Wǎnshang hǎo!',fr:'Bonsoir !',ap:'wan-chang hao',nt:''},
+{id:'a7',w:1,zh:'你们身体好吗？',py:'Nǐmen shēntǐ hǎo ma?',fr:'Vous allez bien ? (litt. « votre santé va bien ? »)',ap:'ni-men cheun-ti hao ma',nt:'Demander la santé des aînés est une marque d’attention très appréciée.'},
+{id:'a8',w:1,zh:'我很好，谢谢！',py:'Wǒ hěn hǎo, xièxie!',fr:'Je vais bien, merci !',ap:'wo heun hao, chié-chié',nt:''},
+{id:'a9',w:1,zh:'我叫…',py:'Wǒ jiào …',fr:'Je m’appelle…',ap:'wo djiao …',nt:'Ajoutez votre prénom. Votre femme vous a peut-être déjà donné un nom chinois !'},
+{id:'a10',w:1,zh:'欢迎！',py:'Huānyíng!',fr:'Bienvenue !',ap:'houan-ying',nt:'Quand ils arrivent chez vous. On le double souvent : 欢迎欢迎！'},
+// Semaine 2
+{id:'b1',w:2,zh:'再见！',py:'Zàijiàn!',fr:'Au revoir !',ap:'dzaï-djien',nt:''},
+{id:'b2',w:2,zh:'拜拜！',py:'Bāibāi!',fr:'Bye-bye !',ap:'baï-baï',nt:'Familier, très utilisé avec les enfants.'},
+{id:'b3',w:2,zh:'明天见！',py:'Míngtiān jiàn!',fr:'À demain !',ap:'ming-tien djien',nt:''},
+{id:'b4',w:2,zh:'晚安！',py:'Wǎn’ān!',fr:'Bonne nuit !',ap:'wan-an',nt:'À dire chaque soir aux enfants.'},
+{id:'b5',w:2,zh:'慢走！',py:'Màn zǒu!',fr:'Rentrez bien ! (litt. « marchez lentement »)',ap:'man dzo-ou',nt:'Dit par celui qui reçoit à ceux qui partent. Vous l’entendrez en quittant vos beaux-parents.'},
+{id:'b6',w:2,zh:'路上小心！',py:'Lùshang xiǎoxīn!',fr:'Soyez prudents sur la route !',ap:'lou-chang chiao-chin',nt:''},
+{id:'b7',w:2,zh:'下次见！',py:'Xià cì jiàn!',fr:'À la prochaine !',ap:'chia tseu djien',nt:''},
+{id:'b8',w:2,zh:'到家发个消息。',py:'Dào jiā fā ge xiāoxi.',fr:'Envoyez-moi un message en arrivant.',ap:'dao djia fa geu chiao-chi',nt:''},
+{id:'b9',w:2,zh:'保重身体！',py:'Bǎozhòng shēntǐ!',fr:'Prenez soin de vous !',ap:'bao-djong cheun-ti',nt:'Pour les aînés, quand on se quitte pour longtemps.'},
+{id:'b10',w:2,zh:'我们会想你们的。',py:'Wǒmen huì xiǎng nǐmen de.',fr:'Vous allez nous manquer.',ap:'wo-men houeï chiang ni-men deu',nt:''},
+// Semaine 3
+{id:'c1',w:3,zh:'吃饭了！',py:'Chīfàn le!',fr:'À table !',ap:'tch’eu-fan leu',nt:''},
+{id:'c2',w:3,zh:'去洗手！',py:'Qù xǐ shǒu!',fr:'Va te laver les mains !',ap:'tch’u chi cho-ou',nt:'Pour les enfants. « u » de qù se dit comme le « u » français.'},
+{id:'c3',w:3,zh:'爸，妈，你们先吃。',py:'Bà, mā, nǐmen xiān chī.',fr:'Papa, maman, commencez, je vous en prie.',ap:'ba, ma, ni-men chien tch’eu',nt:'Les aînés commencent en premier : cette phrase fait toujours plaisir.'},
+{id:'c4',w:3,zh:'好香啊！',py:'Hǎo xiāng a!',fr:'Ça sent bon !',ap:'hao chiang a',nt:''},
+{id:'c5',w:3,zh:'看起来很好吃！',py:'Kàn qǐlai hěn hǎochī!',fr:'Ça a l’air délicieux !',ap:'k’an tchi-laï heun hao-tch’eu',nt:''},
+{id:'c6',w:3,zh:'真好吃！',py:'Zhēn hǎochī!',fr:'C’est vraiment bon !',ap:'djeun hao-tch’eu',nt:'Le compliment le plus utile du programme.'},
+{id:'c7',w:3,zh:'小心烫！',py:'Xiǎoxīn tàng!',fr:'Attention, c’est chaud !',ap:'chiao-chin t’ang',nt:'Pour les enfants.'},
+{id:'c8',w:3,zh:'多吃点！',py:'Duō chī diǎn!',fr:'Mange encore un peu !',ap:'douo tch’eu dien',nt:'Vous l’entendrez souvent de votre belle-mère ! À dire aussi aux enfants.'},
+{id:'c9',w:3,zh:'好好吃饭。',py:'Hǎohǎo chīfàn.',fr:'Mange bien / tiens-toi bien à table.',ap:'hao-hao tch’eu-fan',nt:'Pour les enfants.'},
+{id:'c10',w:3,zh:'我还要一点。',py:'Wǒ hái yào yìdiǎn.',fr:'J’en veux encore un peu.',ap:'wo haï yao yi-dien',nt:''},
+// Semaine 4
+{id:'d1',w:4,zh:'我吃饱了。',py:'Wǒ chī bǎo le.',fr:'J’ai bien mangé, je n’ai plus faim.',ap:'wo tch’eu bao leu',nt:''},
+{id:'d2',w:4,zh:'不用了，谢谢。',py:'Bú yòng le, xièxie.',fr:'Non merci, ça ira.',ap:'bou yong leu, chié-chié',nt:'On insistera : c’est normal de refuser deux ou trois fois. Et si vous videz votre bol, on vous resservira !'},
+{id:'d3',w:4,zh:'你们慢慢吃。',py:'Nǐmen mànmàn chī.',fr:'Prenez votre temps (en quittant la table).',ap:'ni-men man-man tch’eu',nt:'Poli quand vous vous levez avant les autres.'},
+{id:'d4',w:4,zh:'你吃饱了吗？',py:'Nǐ chī bǎo le ma?',fr:'Tu as assez mangé ?',ap:'ni tch’eu bao leu ma',nt:'Pour les enfants.'},
+{id:'d5',w:4,zh:'谢谢妈，辛苦了！',py:'Xièxie mā, xīnkǔ le!',fr:'Merci maman, tu t’es donné du mal !',ap:'chié-chié ma, chin-k’ou leu',nt:'Remercier pour l’effort (辛苦) touche beaucoup celui ou celle qui a cuisiné.'},
+{id:'d6',w:4,zh:'太好吃了！',py:'Tài hǎochī le!',fr:'C’était délicieux !',ap:'t’aï hao-tch’eu leu',nt:''},
+{id:'d7',w:4,zh:'干杯！',py:'Gānbēi!',fr:'Santé ! (litt. « cul sec »)',ap:'gan-beï',nt:'Vous pouvez boire juste une gorgée.'},
+{id:'d8',w:4,zh:'祝你们身体健康！',py:'Zhù nǐmen shēntǐ jiànkāng!',fr:'Je vous souhaite une bonne santé !',ap:'djou ni-men cheun-ti djien-k’ang',nt:'Le toast classique pour les beaux-parents.'},
+{id:'d9',w:4,zh:'我来帮忙。',py:'Wǒ lái bāngmáng.',fr:'Je vais vous aider.',ap:'wo laï bang-mang',nt:''},
+{id:'d10',w:4,zh:'我来洗碗。',py:'Wǒ lái xǐ wǎn.',fr:'Je m’occupe de la vaisselle.',ap:'wo laï chi wan',nt:'Effet garanti auprès de la belle-famille.'}
+];
+const W=[
+{t:'Bonjour et présentations',g:'Saluer, dire que vous êtes heureux de les rencontrer, demander des nouvelles.',m:'Lors de la prochaine visite ou d’un appel vidéo : « 爸，妈，你们好！很高兴见到你们！ » Chaque matin, dites 早上好 aux enfants.'},
+{t:'Au revoir',g:'Prendre congé et montrer qu’on tient à eux.',m:'Chaque soir : 晚安 aux enfants. À la fin d’un appel avec vos beaux-parents : « 保重身体！再见！ »'},
+{t:'À table',g:'Annoncer le repas, laisser les aînés commencer, complimenter le plat.',m:'Annoncez chaque dîner de la semaine en chinois : « 吃饭了！去洗手！ », puis « 真好吃！ »'},
+{t:'Fin du repas et toast',g:'Dire que vous avez bien mangé, remercier, porter un toast, aider.',m:'Un repas entier en chinois : de « 你们先吃 » à « 我来洗碗 », avec un toast « 祝你们身体健康！干杯！ »'}
+];
+const TONES=[['妈','mā','1er ton : haut et plat','Comme une note tenue : « laaa »','maman'],['麻','má','2e ton : montant','Comme un « hein ? » étonné','chanvre'],['马','mǎ','3e ton : descend puis remonte','Comme un « bah… » dubitatif, voix grave','cheval'],['骂','mà','4e ton : descendant, sec','Comme un « Non ! » ferme','gronder']];
+const SOUNDS=[['x','« ch » en souriant','谢谢 xièxie'],['q','« tch » soufflé','去 qù'],['j','« dj » doux','见 jiàn'],['zh','« dj », langue recourbée','真 zhēn'],['ch','« tch », langue recourbée','吃 chī'],['sh','« ch », langue recourbée','上 shàng'],['z','« dz »','再 zài'],['c','« ts » soufflé','次 cì'],['r','entre le « j » français et le « r » anglais','认 rèn'],['h','raclé, comme la jota espagnole','好 hǎo'],['e','« eu »','了 le'],['u après j, q, x, y','« u » français','去 qù'],['u ailleurs','« ou »','路 lù'],['ian','« ien »','天 tiān'],['ui','« oueï »','会 huì']];
+const SC=[
+{t:'Arrivée chez les beaux-parents',l:[['Vous','爸，妈，你们好！','Bonjour papa, maman !'],['Belle-mère','欢迎欢迎！快进来！','Bienvenue ! Entre vite ! (kuài jìnlai)'],['Vous','很高兴见到你们！你们身体好吗？','Très heureux de vous voir ! Vous allez bien ?'],['Beau-père','很好，很好！','Très bien, très bien ! (hěn hǎo)'],['Vous','我很好，谢谢！','Moi ça va, merci !']]},
+{t:'Le repas',l:[['Belle-mère','吃饭了！','À table !'],['Vous','好香啊！爸，妈，你们先吃。','Ça sent bon ! Commencez, je vous en prie.'],['Belle-mère','多吃点！','Mange encore un peu !'],['Vous','真好吃！','C’est vraiment bon !'],['Belle-mère','再吃一点吧！','Reprends-en un peu ! (zài chī yìdiǎn ba)'],['Vous','不用了，谢谢。我吃饱了。','Non merci, j’ai bien mangé.'],['Vous','谢谢妈，辛苦了！我来洗碗。','Merci maman ! Je fais la vaisselle.']]},
+{t:'Le départ',l:[['Vous','爸，妈，我们走了。','On y va. (wǒmen zǒu le)'],['Belle-mère','慢走！路上小心！','Rentrez bien ! Prudence sur la route !'],['Vous','保重身体！再见！','Prenez soin de vous ! Au revoir !'],['Enfants','拜拜！','Bye-bye !'],['Beau-père','到家发个消息。','Envoyez un message en arrivant.']]}
+];
+const KEY='zhfam-v1';let S={known:{},week:1};
+try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.known)S=s;}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const $=id=>document.getElementById(id);
+const SPK='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>';
+
+let voices=[];
+const pickVoice=()=>voices.find(v=>/zh[-_]CN/i.test(v.lang))||voices.find(v=>/^(zh|cmn)/i.test(v.lang));
+const loadVoices=()=>{if(!('speechSynthesis' in window))return;voices=speechSynthesis.getVoices();};
+if('speechSynthesis' in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;}
+function warnVoice(){const w=$('voiceWarn');w.hidden=false;w.innerHTML='<b>Pas de voix chinoise sur cet appareil.</b> Installez-en une (gratuit, fonctionne ensuite hors ligne) :<br>iPhone / iPad : Réglages › Accessibilité › Contenu énoncé › Voix › Chinois (Chine continentale).<br>Android : Paramètres › Synthèse vocale › Moteur Google › installer « Chinois (Chine) ».<br>Windows : Paramètres › Heure et langue › Voix › Ajouter « Chinois (simplifié) ».<br>Mac : Réglages › Accessibilité › Contenu énoncé › Voix du système › Gérer les voix › Chinois.';}
+function speak(text,rate,queue){
+  if(!('speechSynthesis' in window)){warnVoice();return;}
+  if(!voices.length)loadVoices();
+  const v=pickVoice();if(!v&&voices.length)warnVoice();
+  if(!queue)speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text.replace(/…/g,''));u.lang='zh-CN';if(v)u.voice=v;u.rate=rate||0.85;
+  speechSynthesis.speak(u);
+}
+const byId=id=>P.find(p=>p.id===id);
+
+function progress(){const n=P.filter(p=>S.known[p.id]).length;$('pbar').style.width=(n/P.length*100)+'%';$('ptxt').textContent=n+' phrases sues sur '+P.length;}
+function hero(){
+  const p=P.find(p=>!S.known[p.id]);
+  if(!p){$('heroLbl').textContent='Bravo, programme terminé !';$('heroZh').textContent='太棒了！';$('heroPy').textContent='Tài bàng le!';$('heroFr').textContent='Génial ! Continuez à réviser et à parler à table.';$('heroOk').hidden=true;hero.cur='太棒了！';return;}
+  const i=P.filter(q=>q.w===p.w).indexOf(p);
+  $('heroLbl').textContent='Phrase du jour · Semaine '+p.w+', jour '+(Math.floor(i/2)+1);
+  $('heroZh').textContent=p.zh;$('heroPy').textContent=p.py;$('heroFr').textContent=p.fr;$('heroOk').hidden=false;hero.cur=p.zh;hero.id=p.id;
+}
+const card=p=>`<div class="card${S.known[p.id]?' known':''}"><div class="hz zh">${p.zh}</div><div class="py">${p.py}</div><div class="fr">${p.fr}</div><div class="ap">≈ ${p.ap}</div>${p.nt?`<div class="nt">${p.nt}</div>`:''}<div class="row"><button data-id="${p.id}" data-rate="0.85">${SPK}Écouter</button><button data-id="${p.id}" data-rate="0.55">Lentement</button><label class="ok"><input type="checkbox" data-k="${p.id}"${S.known[p.id]?' checked':''}>Je la sais</label></div></div>`;
+function weeks(){
+  $('weeks').innerHTML=W.map((w,i)=>`<button data-w="${i+1}" aria-pressed="${S.week===i+1}">${i+1}. ${w.t}</button>`).join('');
+  const w=W[S.week-1],ps=P.filter(p=>p.w===S.week);
+  $('goal').textContent='Objectif : '+w.g;
+  let h='';for(let d=0;d<5;d++)h+=`<h3>Jour ${d+1}</h3><div class="cards">${ps.slice(d*2,d*2+2).map(card).join('')}</div>`;
+  h+=`<div class="mission"><b>Week-end · mission en famille</b><br><span class="zh">${w.m}</span><br><small>Jours 6 et 7 : révision de toute la semaine dans l’onglet Révision.</small></div>`;
+  $('days').innerHTML=h;
+}
+function refresh(){progress();hero();weeks();}
+
+// Révision
+let deck=[],di=0,shown=false;
+function buildDeck(){const v=$('revPool').value;deck=P.filter(p=>v==='all'?true:v==='todo'?!S.known[p.id]:p.w===+v);for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}di=0;shown=false;flash();}
+function flash(){
+  const f=$('flash');
+  if(!deck.length){f.innerHTML='<p class="q">Rien à réviser ici.</p><p>Toutes ces phrases sont marquées « sues ». Choisissez « Toutes les phrases » pour un tour complet.</p>';return;}
+  if(di>=deck.length){f.innerHTML=`<p class="q">Tour terminé : ${deck.length} cartes.</p><div class="row"><button class="pri" id="again">Recommencer</button></div>`;return;}
+  const p=deck[di],fr=$('revDir').value==='fr';
+  f.innerHTML=`<p class="lbl">Carte ${di+1} / ${deck.length}</p><div class="q">${fr?p.fr:'Écoutez, puis devinez le sens'}</div>`+
+   (shown?`<div class="a"><div class="big zh" style="font-size:40px">${p.zh}</div><div class="bigpy">${p.py}</div><div>${fr?'≈ '+p.ap:p.fr}</div></div><div class="row"><button data-id="${p.id}" data-rate="0.85">${SPK}Écouter</button><button id="miss">À revoir</button><button class="pri" id="hit">Je savais</button></div>`
+   :`<div class="row">${fr?'':`<button data-id="${p.id}" data-rate="0.85">${SPK}Écouter</button>`}<button class="pri" id="show">Voir la réponse</button></div>`);
+  if(!fr&&!shown)speak(p.zh,0.85);
+}
+
+// Prononciation & scènes
+$('tones').innerHTML=TONES.map(t=>`<div class="card"><div class="hz zh">${t[0]}</div><div class="py">${t[1]} · ${t[4]}</div><div class="fr">${t[2]}</div><div class="ap">${t[3]}</div><div class="row"><button data-txt="${t[0]}" data-rate="0.6">${SPK}Écouter</button></div></div>`).join('');
+$('sounds').innerHTML=SOUNDS.map(s=>`<tr><td><b>${s[0]}</b></td><td>${s[1]}</td><td><span class="zh">${s[2]}</span></td></tr>`).join('');
+$('scenesBox').innerHTML=SC.map((s,i)=>`<div class="scene"><div class="row" style="justify-content:space-between"><h3 style="margin:0">${s.t}</h3><button data-scene="${i}">${SPK}Écouter toute la scène</button></div>${s.l.map(l=>`<div class="line"><span class="who">${l[0]}</span><div><span class="hz zh">${l[1]}</span><small>${l[2]}</small></div><button aria-label="Écouter" data-txt="${l[1]}" data-rate="0.8">${SPK}</button></div>`).join('')}</div>`).join('');
+
+// Événements
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.tab){document.querySelectorAll('[data-tab]').forEach(x=>{x.setAttribute('aria-selected',x===b);$('tab-'+x.dataset.tab).hidden=x!==b;});if(b.dataset.tab==='rev'&&!deck.length)buildDeck();return;}
+  if(b.dataset.w){S.week=+b.dataset.w;save();weeks();return;}
+  if(b.dataset.say==='hero'){speak(hero.cur,+b.dataset.rate);return;}
+  if(b.dataset.id){speak(byId(b.dataset.id).zh,+b.dataset.rate);return;}
+  if(b.dataset.txt){speak(b.dataset.txt,+b.dataset.rate);return;}
+  if(b.dataset.scene){speechSynthesis&&speechSynthesis.cancel();SC[+b.dataset.scene].l.forEach(l=>speak(l[1],0.8,true));return;}
+  if(b.id==='heroOk'){S.known[hero.id]=true;save();refresh();return;}
+  if(b.id==='show'){shown=true;flash();return;}
+  if(b.id==='hit'){S.known[deck[di].id]=true;save();progress();hero();weeks();di++;shown=false;flash();return;}
+  if(b.id==='miss'){delete S.known[deck[di].id];save();progress();hero();weeks();di++;shown=false;flash();return;}
+  if(b.id==='again'){buildDeck();return;}
+});
+document.addEventListener('change',e=>{
+  const k=e.target.dataset&&e.target.dataset.k;
+  if(k){if(e.target.checked)S.known[k]=true;else delete S.known[k];save();progress();hero();e.target.closest('.card').classList.toggle('known',e.target.checked);return;}
+  if(e.target.id==='revPool'||e.target.id==='revDir')buildDeck();
+});
+refresh();
+if(location.protocol.startsWith('http')&&'serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
